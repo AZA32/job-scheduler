@@ -1,25 +1,45 @@
 plugins {
-    id 'org.springframework.boot' version '2.4.1'
-    id 'io.spring.dependency-management' version '1.0.10.RELEASE'
+    id 'org.springframework.boot' version '2.4.11'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'java'
+    id 'com.bmuschko.docker-spring-boot-application' version '6.7.0'
 }
 
 group = 'com.example'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '1.8'
 
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
 repositories {
     mavenCentral()
 }
 
+docker {
+    springBootApplication {
+        baseImage = 'openjdk:8-alpine'
+        ports = [8080, 8080]
+        images = ["registry.cn-beijing.aliyuncs.com/namespace_docker/${rootProject.name}:${project.version}"]
+        jvmArgs = ['-Dspring.profiles.active=production', '-Xmx2048m']
+    }
+}
+
 dependencies {
-    implementation 'org.projectlombok:lombok:1.18.24'
-    implementation 'mysql:mysql-connector-java:8.0.29'
+    implementation 'org.aspectj:aspectjweaver:1.9.9.1'
+    implementation 'org.aspectj:aspectjrt:1.9.9.1'
+    implementation 'p6spy:p6spy:3.9.1'
+    compileOnly 'org.projectlombok:lombok'
+    runtimeOnly 'mysql:mysql-connector-java'
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+    annotationProcessor 'org.projectlombok:lombok'
     implementation 'com.baomidou:mybatis-plus-boot-starter:3.5.1'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-
+    implementation  'org.springframework.boot:spring-boot-starter-validation'
 }
 
 test {

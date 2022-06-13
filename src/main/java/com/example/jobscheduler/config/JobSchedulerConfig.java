@@ -17,6 +17,8 @@ public class JobSchedulerConfig {
     public ThreadPoolTaskScheduler threadPoolTaskScheduler(TaskSchedulerBuilder builder){
         ThreadPoolTaskScheduler threadPoolTaskScheduler = builder.build();
         threadPoolTaskScheduler.setPoolSize(Runtime.getRuntime().availableProcessors());
+        //将取消后的任务从队列中清除
+        threadPoolTaskScheduler.setRemoveOnCancelPolicy(true);
         return threadPoolTaskScheduler;
     }
 
